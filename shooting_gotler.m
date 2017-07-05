@@ -1,20 +1,33 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                           shooting_gotler                           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%                           Code description                          %
+
 % This code implements the shooting method for solving 1D boundary value 
 % problem. It uses the Runge-Kutta method of 4th order for solving the 
 % ODE and the interval bisection method for finding the alpha parameter. 
 
 % The meaning of input and output parameters: 
+%
 % x - grid of points where the solution have been found
+%
 % y - 2D array, values of function (solution) are in first row, values 
 % of 1st derivative are in second row
+%
 % gotler - the function handle, fun contains system of solved 
 % differential equations
+%
 % h - the step of the Runge-Kutta method (the step of the grid)            
 % zero - the interval bisection method accuracy
+%
 % con - values of boundary conditions (2D vector)
-% type - to specify type of the boundary condition in the particular 
+%
+% type - to specify type of the boundary condition in the particular
 % point, it is the string consists of 2 char ('f' for function, 'd' for
 % derivative), e.g 'fd' is meant that in a point the condition is
 % related to function and in the b point to derivative
+%
 % init - 2D vector of initial alpha parameters, it is not required, the 
 % implicit value is [-10 10]
 
@@ -23,10 +36,14 @@
 % graphicaly after enumeration.
 
 % Example run that works to an extent:
-% [x y,baseT] = shooting_gotler(@gotler,0.0030,1e-6,1,3,[0 0],'ff');  
+%
+% [x y,baseT] = shooting_gotler(@gotler,0.0030,1e-6,1,3,[0 0],'ff');
+%
 % It is meant that will be solved the BVP ODE described in the function
 % gotler, on the interval (1,3) with boundary conditions y(1) = 0 and 
 % y(3) = 0 to a tolerance of 1e-6.
+
+% Function for output of eigenfuntion
 
 function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     type,init) 
@@ -34,9 +51,9 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     % Parameters and base flow should really be put into funtion 
 
     gamma=1.4; Pr=1; C=0.509;
-    D=4; % Fitting parameter for base flow 
+    D=1; % Fitting parameter for base flow 
     eta=1; % Chosen matching point or left boundary 
-    betag=1; Gstar=0; Q=0; sigma=1;
+    betag=1; Gstar=2; Q=1; sigma=1;
     
     % Solve for the base flow 
     
@@ -52,7 +69,6 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     else
         shoot1 = -20; shoot2 = 10;
     end
-    
     
     % Sets up boundary condition vectors, with the first entries being
     % the know dirichlet conditions and the second the two shoots
@@ -81,6 +97,7 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     end    
     
     % Identify if as root is possible by checking for sign change
+    
     if (F1*F2 > 0) 
         error('The root of F function does not exist')
     end
@@ -128,5 +145,6 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     set(gca,'FontSize',12);          
     legend('Function','{1^{st}} Derivative','Location','Best');       
     hold off;
-    toc;
+    toc
+    
 end
