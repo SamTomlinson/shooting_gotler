@@ -57,7 +57,7 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     
     % Solve for the base flow 
     
-    [x,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,eta);
+    [~,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,eta);
 
     tic; % Begin time
     
@@ -67,7 +67,7 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     if nargin == 8
         shoot1 = init(1); shoot2 = init(2);
     else
-        shoot1 = -20; shoot2 = 10;
+        shoot1 = -5; shoot2 = 10;
     end
     
     % Sets up boundary condition vectors, with the first entries being
@@ -83,7 +83,7 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     
     % Now iterate solution outwards using Rk method 
     
-    [x, F1] = RK(a,b,h,a1,gotler,baseT,baseTdash,baseU,kappa,betag,...
+    [~, F1] = RK(a,b,h,a1,gotler,baseT,baseTdash,baseU,kappa,betag,...
         Gstar,Q,sigma,intbaseT); 
     [x, F2] = RK(a,b,h,a2,gotler,baseT,baseTdash,baseU,kappa,betag,...
         Gstar,Q,sigma,intbaseT);         
@@ -97,7 +97,7 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
         F2 = F2(2,end) - con(2);
         r = 2;
     end    
-    
+
     % Identify if as root is possible by checking for sign change
     
     if (F1*F2 > 0) 
@@ -111,6 +111,8 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     % Iteration to home in on axis crossing 
     
     while (abs(F3) > zero) 
+        
+        F3;
         
         % Bring one shoot in half the distance between the teo
         
@@ -136,6 +138,7 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
         else
             error('Something has gone horribly wrong, probs NANS');           
         end
+        
     end           
     
     % Plotting of solutions 

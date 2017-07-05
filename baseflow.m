@@ -14,4 +14,24 @@ S=bvp4c(dydx,BC,solint);
 x=S.x; baseT=S.y(4,:); baseTdash=S.y(5,:); intbaseT=trapz(baseT);
  
 baseU=S.y(2,:);
+
+figure('position', [0,0,800,800]); 
+plot(x,baseT,'LineWidth',2); 
+set(gca,'Fontsize',20)
+%hold on; plot(a2,b2); plot(a3,b3); plot(a4,b4); plot(a5,b5); 
+%legend('n=0.2 Num','n=0.4  Num','n=0.6  Num','n=0.8  Num','n=1.0  Num')
+ylabel('Temp. in adj. region, $T_1$','Interpreter', 'LaTex','Fontsize',40)
+xlabel('Wall layer variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+xlim([1,3])
+grid on
+
+figure('position', [0,0,800,800]); 
+plot(x,baseU,'LineWidth',2); 
+set(gca,'Fontsize',20)
+%hold on; plot(a2,c2); plot(a3,c3); plot(a4,c4); plot(a5,c5)
+%legend('n=0.2 Num','n=0.4  Num','n=0.6  Num','n=0.8  Num','n=1.0  Num')
+ylabel('Vel. in adj. region, $U_1$','Interpreter', 'LaTex','Fontsize',40)
+xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
+xlim([1,3])
+grid on
     
