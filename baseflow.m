@@ -7,7 +7,7 @@ BC=@(za,zb)[za(1) - D/(eta^(3/Pr)) ; zb(2) ; za(2) + (3/Pr)*D/eta^((3/Pr)-1); za
     
 zint=@(x)[0 ; 1; 0 ; 1 ; 0];
     
-solint=bvpinit(linspace(1,3,1001),zint);
+solint=bvpinit(linspace(1,7,1001),zint);
     
 S=bvp4c(dydx,BC,solint);
     
@@ -22,7 +22,7 @@ set(gca,'Fontsize',20)
 %legend('n=0.2 Num','n=0.4  Num','n=0.6  Num','n=0.8  Num','n=1.0  Num')
 ylabel('Temp. in adj. region, $T_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([1,3])
+xlim([1,7])
 grid on
 
 figure('position', [0,0,800,800]); 
@@ -32,6 +32,6 @@ set(gca,'Fontsize',20)
 %legend('n=0.2 Num','n=0.4  Num','n=0.6  Num','n=0.8  Num','n=1.0  Num')
 ylabel('Vel. in adj. region, $U_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([1,3])
+xlim([1,7])
 grid on
     

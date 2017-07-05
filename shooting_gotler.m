@@ -37,7 +37,7 @@
 
 % Example run that works to an extent:
 %
-% [x y,baseT] = shooting_gotler(@gotler,0.0030,1e-6,1,3,[0 0],'ff');
+% [x y,baseT] = shooting_gotler(@gotler,0.0060,1e-6,1,7,[0 0],'ff');
 %
 % It is meant that will be solved the BVP ODE described in the function
 % gotler, on the interval (1,3) with boundary conditions y(1) = 0 and 
@@ -151,7 +151,7 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     set(l1, 'Interpreter','LaTex','Fontsize',30);
     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter', 'LaTex','Fontsize',40)
     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([1,3])
+    xlim([1,7])
     grid on
     hold off;
     toc
