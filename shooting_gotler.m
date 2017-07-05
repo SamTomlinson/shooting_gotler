@@ -1,51 +1,48 @@
-%This code implements the shooting method for solving 1D boundary value problem (abbrev. BVP ODE). 
-%It uses the Runge-Kutta method of 4th order for solving ODE and the interval bisection method for finding the alpha parameter. 
-%
-%The meaning of input and output parameters: 
-%x - grid of points where the solution have been found
-%y - 2D array, values of function (solution) are in first row, values of
-%    1st derivative are in second row
-%fun - the function handle, fun contains system of solved differential
-%      equations, e.g. let y'' + y = sqrt(x+1) be the solved differential
-%      equation, then fun has the shape:
-%      function out = fce(x,y)
-%         out(1) = y(2);
-%         out(2) = sqrt(x+1)-y(1);
-%h - the step of the Runge-Kutta method (the step of the grid)            
-%zero - the interval bisection method accuracy, it is recommended to set 1e-6 
-%a,b - outer points of the interval
-%con - values of boundary conditions (2D vector)
-%type - to specify type of the boundary condition in the particular point,
-%       it is the string consists of 2 char ('f' for function, 'd' for
-%       derivative), e.g 'fd' is meant that in a point the condition is
-%       related to function and in the b point to derivative
-%init - 2D vector of initial alpha parameters, it is not required, the implicit
-%       value is [-10 10]
-%
-%The ploting of the solution:
-%The solution (both function and 1st derivative) of BVP ODE is shown graphicaly after enumeration.
-%
-%The example of using:
-%[x y,baseT] = shooting_gotler(@gotler,0.0030,1e-6,1,3,[0 0],'ff')  
-%It is meant that will be solved the BVP ODE described in the function fun,
-%on the interval (0,1) with boundary conditions y(0) = 1 and y'(1) = 3
+% This code implements the shooting method for solving 1D boundary value 
+% problem. It uses the Runge-Kutta method of 4th order for solving the 
+% ODE and the interval bisection method for finding the alpha parameter. 
 
-function [x y,baseT] = shooting_gotler(gotler,h,zero,a,b,con,type,init) 
+% The meaning of input and output parameters: 
+% x - grid of points where the solution have been found
+% y - 2D array, values of function (solution) are in first row, values 
+% of 1st derivative are in second row
+% gotler - the function handle, fun contains system of solved 
+% differential equations
+% h - the step of the Runge-Kutta method (the step of the grid)            
+% zero - the interval bisection method accuracy
+% con - values of boundary conditions (2D vector)
+% type - to specify type of the boundary condition in the particular 
+% point, it is the string consists of 2 char ('f' for function, 'd' for
+% derivative), e.g 'fd' is meant that in a point the condition is
+% related to function and in the b point to derivative
+% init - 2D vector of initial alpha parameters, it is not required, the 
+% implicit value is [-10 10]
 
-    % Parameters and base flow 
+% The ploting of the solution:
+% The solution (both function and 1st derivative) of BVP ODE is shown 
+% graphicaly after enumeration.
 
-    gamma=1.4;
-    Pr=0.72;
-    C=0.509;
-    D=4; % Fitting parameter
-    eta=1; % Chosen matching point
-    betag=1;
-    Gstar=0;
-    Q=0;
-    sigma=1;
+% Example run that works to an extent:
+% [x y,baseT] = shooting_gotler(@gotler,0.0030,1e-6,1,3,[0 0],'ff');  
+% It is meant that will be solved the BVP ODE described in the function
+% gotler, on the interval (1,3) with boundary conditions y(1) = 0 and 
+% y(3) = 0 to a tolerance of 1e-6.
+
+function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
+    type,init) 
+
+    % Parameters and base flow should really be put into funtion 
+
+    gamma=1.4; Pr=1; C=0.509;
+    D=4; % Fitting parameter for base flow 
+    eta=1; % Chosen matching point or left boundary 
+    betag=1; Gstar=0; Q=0; sigma=1;
+    
+    % Solve for the base flow 
+    
     [x,baseT,baseTdash]= baseflow(C,Pr,D,eta);
 
-    tic;
+    tic; % Begin time
     
     % If my number of arguements is 8 then initial guesses gave been 
     % specified if not take these to be -1 and 1.
@@ -83,17 +80,25 @@ function [x y,baseT] = shooting_gotler(gotler,h,zero,a,b,con,type,init)
         r = 2;
     end    
     
+    % Identify if as root is possible by checking for sign change
     if (F1*F2 > 0) 
-        error('The root of F function does not exist, for selected initialization parameters. Please, change the init array.')
+        error('The root of F function does not exist')
     end
     
-    F3 = F1
+    % Set one shoot for iteration 
     
+    F3 = F1;
+    
+    % Iteration to home in on axis crossing 
     
     while (abs(F3) > zero) 
         
+        % Bring one shoot in half the distance between the teo
         
         shoot3 = (shoot1 + shoot2)/2;
+        
+        % Renforce conditions and rerun RK solver on loop adjusting 
+        % to compensate for average overshooting root
         
         if (type(1)=='f')
            a3 = [con(1) shoot3];            
@@ -111,7 +116,9 @@ function [x y,baseT] = shooting_gotler(gotler,h,zero,a,b,con,type,init)
             error('Something has gone horribly wrong, probs NANS');           
         end
     end           
-        
+    
+    % Plotting of solutions 
+    
     h = plot(x,y(1,:),'k-'); set(h,'linewidth',2);
     hold on;
     h = plot(x,y(2,:),'r-'); set(h,'linewidth',2);  
