@@ -140,15 +140,16 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     
     % Plotting of solutions 
     
-    h = plot(x,y(1,:),'k-'); set(h,'linewidth',2);
-    hold on;
-    h = plot(x,y(2,:),'r-'); set(h,'linewidth',2);  
-    xlabel('{\it x}','FontSize',12);
-    ylabel('y({\it x }), y^{(1)}({\it x })','FontSize',12);
-    title('Solution of 1D Boundary Value Problem by Shooting Method',...
-        'FontSize',12);    
-    set(gca,'FontSize',12);          
-    legend('Function','{1^{st}} Derivative','Location','Best');       
+    figure('position', [0,0,800,800]); 
+    plot(x,y(1,:),'k-','LineWidth',2); hold on; 
+    plot(x,y(2,:),'r-','LineWidth',2); 
+    set(gca,'Fontsize',20)
+    l1=legend('$v_0(\eta)$','$v_{0\eta}(\eta)$');
+    set(l1, 'Interpreter','LaTex','Fontsize',30);
+    ylabel('Vel. in the temp. adj. region $v_0$','Interpreter', 'LaTex','Fontsize',40)
+    xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+    xlim([1,3])
+    grid on
     hold off;
     toc
     
