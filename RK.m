@@ -1,4 +1,4 @@
-function [x y] = RK(a,b,h,con,gotler,baseT,baseTdash,baseU,kappa,betag,Gstar,Q,sigma)
+function [x, y] = RK(a,b,h,con,gotler,baseT,baseTdash,baseU,kappa,betag,Gstar,Q,sigma)
     x = a:h:b; 
     n = length(x);
     y = zeros(length(con),n);
