@@ -53,11 +53,11 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     gamma=1.4; Pr=1; C=0.509;
     D=1; % Fitting parameter for base flow 
     eta=1; % Chosen matching point or left boundary 
-    betag=1; Gstar=2; Q=1; sigma=1; kappa=1;
+    betag=1; Gstar=2; Q=1; sigma=0.1; kappa=1;
     
     % Solve for the base flow 
     
-    [x,baseT,baseTdash,baseU]= baseflow(C,Pr,D,eta);
+    [x,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,eta);
 
     tic; % Begin time
     
@@ -84,9 +84,9 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     % Now iterate solution outwards using Rk method 
     
     [x, F1] = RK(a,b,h,a1,gotler,baseT,baseTdash,baseU,kappa,betag,...
-        Gstar,Q,sigma); 
+        Gstar,Q,sigma,intbaseT); 
     [x, F2] = RK(a,b,h,a2,gotler,baseT,baseTdash,baseU,kappa,betag,...
-        Gstar,Q,sigma);         
+        Gstar,Q,sigma,intbaseT);         
     
     if (type(2)=='f')
         F1 = F1(1,end) - con(2);
@@ -126,7 +126,7 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
         end           
         
         [x, F3] = RK(a,b,h,a3,gotler,baseT,baseTdash,baseU,kappa,...
-            betag,Gstar,Q,sigma);
+            betag,Gstar,Q,sigma,intbaseT);
         
         y = F3; F3 = F3(r,end) - con(2); 
         if (F1*F3 < 0)
