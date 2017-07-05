@@ -53,11 +53,11 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     gamma=1.4; Pr=1; C=0.509;
     D=1; % Fitting parameter for base flow 
     eta=1; % Chosen matching point or left boundary 
-    betag=1; Gstar=2; Q=1; sigma=1;
+    betag=1; Gstar=2; Q=1; sigma=1; kappa=1;
     
     % Solve for the base flow 
     
-    [x,baseT,baseTdash]= baseflow(C,Pr,D,eta);
+    [x,baseT,baseTdash,baseU]= baseflow(C,Pr,D,eta);
 
     tic; % Begin time
     
@@ -83,8 +83,10 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     
     % Now iterate solution outwards using Rk method 
     
-    [x, F1] = RK(a,b,h,a1,gotler,baseT,baseTdash,betag,Gstar,Q,sigma); 
-    [x, F2] = RK(a,b,h,a2,gotler,baseT,baseTdash,betag,Gstar,Q,sigma);         
+    [x, F1] = RK(a,b,h,a1,gotler,baseT,baseTdash,baseU,kappa,betag,...
+        Gstar,Q,sigma); 
+    [x, F2] = RK(a,b,h,a2,gotler,baseT,baseTdash,baseU,kappa,betag,...
+        Gstar,Q,sigma);         
     
     if (type(2)=='f')
         F1 = F1(1,end) - con(2);
@@ -123,7 +125,9 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
            a3 = [shoot3 con(1)];            
         end           
         
-        [x, F3] = RK(a,b,h,a3,gotler,baseT,baseTdash,betag,Gstar,Q,sigma); 
+        [x, F3] = RK(a,b,h,a3,gotler,baseT,baseTdash,baseU,kappa,...
+            betag,Gstar,Q,sigma);
+        
         y = F3; F3 = F3(r,end) - con(2); 
         if (F1*F3 < 0)
             shoot2 = shoot3; F2 = F3;            
@@ -141,7 +145,8 @@ function [x, y, baseT] = shooting_gotler(gotler,h,zero,a,b,con,...
     h = plot(x,y(2,:),'r-'); set(h,'linewidth',2);  
     xlabel('{\it x}','FontSize',12);
     ylabel('y({\it x }), y^{(1)}({\it x })','FontSize',12);
-    title('Solution of 1D Boundary Value Problem by Shooting Method','FontSize',12);    
+    title('Solution of 1D Boundary Value Problem by Shooting Method',...
+        'FontSize',12);    
     set(gca,'FontSize',12);          
     legend('Function','{1^{st}} Derivative','Location','Best');       
     hold off;
