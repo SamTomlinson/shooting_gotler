@@ -49,7 +49,7 @@
 %                               Example                                %
 %
 % [eta, v] = shooting_gotler(@gotler,deltaeta,tol,a,b,bcs,init,beta,khat)
-% [eta, v] = shooting_gotler(@gotler,0.0060,1e-6,1,7,[0 0],'ff',1,0.1);
+% [eta, v] = shooting_gotler(@gotler,0.0060,1e-6,1,7,[0 0],1,0.1);
 %
 % i.e. solve bvp in gotler on [1,7] with bcs v(1)=0 and v(7)=0, 
 % tolerance 1e-6, wavenumbers beta=1 and khat=0.1
@@ -62,7 +62,7 @@
 
 
 function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
-    init,beta,khat) 
+    beta,khat,init) 
 
     % Parameters and base flow should really be put into funtion 
 
@@ -78,7 +78,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     % Number of arguements is 8 then initial guesses gave been 
     % specified if not take these to be -10 and 10.
     
-    if nargin == 10
+    if nargin == 9
         shoot1 = init(1); shoot2 = init(2);
     else
         shoot1 = -5; shoot2 = 10;
@@ -94,7 +94,11 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,baseU,kappa,...
         beta,khat,intbaseT); 
     [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,baseU,kappa,...
-        beta,khat,intbaseT);  
+        beta,khat,intbaseT); 
+    
+    figure()
+    plot(eta,F1); hold on;
+    plot(eta,F2); hold off;
     
     F1 = F1(1,end) - bcs(2);
     F2 = F2(1,end) - bcs(2);
