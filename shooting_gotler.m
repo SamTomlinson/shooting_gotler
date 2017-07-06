@@ -81,7 +81,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     if nargin == 10
         shoot1 = init(1); shoot2 = init(2);
     else
-        shoot1 = -10; shoot2 = 5;
+        shoot1 = -5; shoot2 = 5;
     end
     
     % Sets up boundary condition vectors
@@ -112,13 +112,10 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     % Set one shoot for iteration 
     
     F3 = F1;
-    
+   
     % Iteration to home in on axis crossing
     
-    % Initialise
-    shoot3=0;
-    
-    while (abs(shoot3-shoot1) & abs(shoot3-shoot2) > tol) 
+    while (abs(F3) > tol) 
         
         % Check
         % F3
