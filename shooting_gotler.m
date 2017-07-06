@@ -81,7 +81,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     if nargin == 10
         shoot1 = init(1); shoot2 = init(2);
     else
-        shoot1 = -5; shoot2 = 5;
+        shoot1 = -5; shoot2 = 10;
     end
     
     % Sets up boundary condition vectors
@@ -98,7 +98,6 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     
     F1 = F1(1,end) - bcs(2);
     F2 = F2(1,end) - bcs(2);
-    r = 1;
 
     % Identify if as root is possible by checking for sign change
     
@@ -106,7 +105,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     % F1*F2
     
     if (F1*F2 > 0) 
-        error('The root of F function does not exist')
+        error('The root does not exist')
     end
     
     % Set one shoot for iteration 
@@ -135,10 +134,10 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
         % Check
         % F3(r,end);
         
-        v = F3; F3 = F3(r,end) - bcs(2); 
+        v = F3; F3 = F3(1,end) - bcs(2); 
         if (F1*F3 < 0)
             shoot2 = shoot3; F2 = F3;            
-        elseif (F1*F2 < 0)
+        elseif (F1*F3 > 0)
             shoot1 = shoot3; F1 = F3;
         else
             error('Something has gone horribly wrong, probs NANS');           

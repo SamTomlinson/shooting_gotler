@@ -20,7 +20,7 @@ plot(eta,baseT,'LineWidth',2);
 set(gca,'Fontsize',20)
 ylabel('Temp. in adj. region, $T_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([1,7])
+xlim([a,b])
 grid on
 
 figure('position', [0,0,800,800]); 
@@ -28,6 +28,6 @@ plot(eta,baseU,'LineWidth',2);
 set(gca,'Fontsize',20)
 ylabel('Vel. in adj. region, $U_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([1,7])
+xlim([a,b])
 grid on
     
