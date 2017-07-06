@@ -4,10 +4,8 @@
 
 %                           Code description                          %
 
-% This code uses the shooting method for solving 1D gotler stability 
-% equation with Dirichlet BCS. It uses 4th order RK  for solving the 
-% DE and finds the bisection to ensure BCs are satisfied and solution
-% reached.
+% Shooting method for solving 1D gotler stability equation with 
+% Dirichlet BCS. 4th order RK and bisection to ensure BCs
 
 % Key: 
 %
@@ -19,7 +17,7 @@
 % gotler - the function handle, fun contains system of solved 
 % differential equations
 %
-% h - the step of the Runge-Kutta method (the step of the grid)            
+% deltaeta - the step of the Runge-Kutta method (the step of the grid)            
 % zero - the interval bisection method accuracy
 %
 % con - values of boundary conditions (2D vector)
@@ -46,7 +44,7 @@
 
 % Function for output of eigenfuntion
 
-function [eta, y] = shooting_gotler(gotler,h,zero,a,b,con,...
+function [eta, y] = shooting_gotler(gotler,deltaeta,zero,a,b,con,...
     type,init) 
 
     % Parameters and base flow should really be put into funtion 
@@ -58,7 +56,7 @@ function [eta, y] = shooting_gotler(gotler,h,zero,a,b,con,...
     
     % Solve for the base flow 
     
-    [~,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,etab);
+    [~,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,etab,deltaeta);
 
     tic; % Begin time
     
@@ -84,9 +82,9 @@ function [eta, y] = shooting_gotler(gotler,h,zero,a,b,con,...
     
     % Now iterate solution outwards using Rk method 
     
-    [~, F1] = RK(a,b,h,a1,gotler,baseT,baseTdash,baseU,kappa,betag,...
+    [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,baseU,kappa,betag,...
         sigma,intbaseT); 
-    [eta, F2] = RK(a,b,h,a2,gotler,baseT,baseTdash,baseU,kappa,betag,...
+    [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,baseU,kappa,betag,...
         sigma,intbaseT);         
     
     if (type(2)=='f')
@@ -129,7 +127,7 @@ function [eta, y] = shooting_gotler(gotler,h,zero,a,b,con,...
            a3 = [shoot3 con(1)];            
         end           
         
-        [eta, F3] = RK(a,b,h,a3,gotler,baseT,baseTdash,baseU,kappa,...
+        [eta, F3] = RK(a,b,deltaeta,a3,gotler,baseT,baseTdash,baseU,kappa,...
             betag,sigma,intbaseT);
         
         % Check

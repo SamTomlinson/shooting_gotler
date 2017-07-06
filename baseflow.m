@@ -1,4 +1,4 @@
-function [eta,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,etab)
+function [eta,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,etab,deltaeta)
     
 dydx=@(eta,z)[z(2);z(3);(-eta*z(3)+ (((C+1)*(C-z(4)*z(5)))/(2*sqrt(z(4))*(C+z(4))^2))*z(3))/(((1+C)*sqrt(z(4)))/(z(4)+C)); ...
     z(5);(-eta*z(5) + (Pr^-1)*(((C+1)*(C-z(4)*z(5)))/(2*sqrt(z(4))*(C+z(4))^2))*z(5))/((Pr^-1)*((1+C)*sqrt(z(4)))/(z(4)+C))];
@@ -7,7 +7,7 @@ BC=@(za,zb)[za(1) - D/(etab^(3/Pr)) ; zb(2) ; za(2) + (3/Pr)*D/etab^((3/Pr)-1); 
     
 zint=@(x)[0 ; 1; 0 ; 1 ; 0];
     
-solint=bvpinit(linspace(1,7,1001),zint);
+solint=bvpinit(1:deltaeta:7,zint);
     
 S=bvp4c(dydx,BC,solint);
     
