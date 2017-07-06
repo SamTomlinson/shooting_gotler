@@ -7,63 +7,62 @@
 % Shooting method for solving 1D gotler stability equation with 
 % Dirichlet BCS. 4th order RK and bisection to ensure BCs
 
-% Key: 
+%                                 Key                                 % 
 %
 % eta - grid points
 %
-% y - 2D array, values of function (solution) are in first row, values 
-% of 1st derivative are in second row
+% v - v0 and v0dash array 
 %
-% gotler - the function handle, fun contains system of solved 
-% differential equations
+% gotler - function containing de for gotler
 %
-% deltaeta - the step of the Runge-Kutta method (the step of the grid)            
-% zero - the interval bisection method accuracy
+% deltaeta - step size
 %
-% con - values of boundary conditions (2D vector)
+% tol - tolerance
 %
-% type - to specify type of the boundary condition in the particular
-% point, it is the string consists of 2 char ('f' for function, 'd' for
-% derivative), e.g 'fd' is meant that in a point the condition is
-% related to function and in the b point to derivative
+% bcs - values of boundary conditions (2D vector)
 %
-% init - 2D vector of initial alpha parameters, it is not required, the 
-% implicit value is [-10 10]
+% init - initial guess, if not specified given as [-5,10]
+%
+% a,b - two ends of the domain
+%
+% flow parameters - gamma (specific heat), Pr (prandtl), C (sutherlands
+% constant), D (fitting parameter), etab (matching point for edge of
+% adjustment region)
+% 
+% beta - streamwise wavenumber
+%
+% k - spanwise wavenumber
+% 
 
-% The ploting of the solution:
-% The solution (both function and 1st derivative) of BVP ODE is shown 
-% graphicaly after enumeration.
 
-% Example run that works to an extent:
+%                               Example                                %
 %
-% [eta, y] = shooting_gotler(@gotler,0.0060,1e-6,1,7,[0 0],'ff');
+% [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,init)
+% [eta, v] = shooting_gotler(@gotler,0.0060,1e-6,1,7,[0 0],'ff');
 %
-% It is meant that will be solved the BVP ODE described in the function
-% gotler, on the interval (1,3) with boundary conditions y(1) = 0 and 
-% y(3) = 0 to a tolerance of 1e-6.
+% i.e. solve bvp in gotler on [1,7] with bcs v(1)=0 and v(7)=0 with 
+% tolerance 1e-6
 
-% Function for output of eigenfuntion
+%                         Output eigenfuntion                          %
 
-function [eta, y] = shooting_gotler(gotler,deltaeta,zero,a,b,con,...
-    type,init) 
+function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
+    init) 
 
     % Parameters and base flow should really be put into funtion 
 
-    gamma=1.4; Pr=1; C=0.509;
-    D=1; % Fitting parameter for base flow 
-    etab=1; % Chosen matching point or left boundary 
-    betag=1; sigma=0.1; kappa=1;
+    gamma=1.4; Pr=1; C=0.509; D=1; etab=1; kappa=1;
+    beta=1; khat=0.1;
     
     % Solve for the base flow 
     
-    [~,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,etab,deltaeta);
+    [~,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,etab,deltaeta,a,b);
 
     tic; % Begin time
     
     % If my number of arguements is 8 then initial guesses gave been 
     % specified if not take these to be -1 and 1.
     
-    if nargin == 8
+    if nargin == 9
         shoot1 = init(1); shoot2 = init(2);
     else
         shoot1 = -5; shoot2 = 10;
@@ -72,30 +71,19 @@ function [eta, y] = shooting_gotler(gotler,deltaeta,zero,a,b,con,...
     % Sets up boundary condition vectors, with the first entries being
     % the know dirichlet conditions and the second the two shoots
     
-    if (type(1)=='f')
-        a1 = [con(1) shoot1];
-        a2 = [con(1) shoot2];
-    else
-        a1 = [shoot1 con(1)];
-        a2 = [shoot2 con(1)];
-    end  
+    a1 = [bcs(1) shoot1];
+    a2 = [bcs(1) shoot2]; 
     
     % Now iterate solution outwards using Rk method 
     
-    [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,baseU,kappa,betag,...
-        sigma,intbaseT); 
-    [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,baseU,kappa,betag,...
-        sigma,intbaseT);         
+    [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,baseU,kappa,beta,...
+        khat,intbaseT); 
+    [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,baseU,kappa,beta,...
+        khat,intbaseT);         
     
-    if (type(2)=='f')
-        F1 = F1(1,end) - con(2);
-        F2 = F2(1,end) - con(2);
-        r = 1;
-    else
-        F1 = F1(2,end) - con(2); 
-        F2 = F2(2,end) - con(2);
-        r = 2;
-    end   
+    F1 = F1(1,end) - bcs(2);
+    F2 = F2(1,end) - bcs(2);
+    r = 1;
 
     % Identify if as root is possible by checking for sign change
     
@@ -109,10 +97,10 @@ function [eta, y] = shooting_gotler(gotler,deltaeta,zero,a,b,con,...
     
     % Iteration to home in on axis crossing 
     
-    while (abs(F3) > zero) 
+    while (abs(F3) > tol) 
         
         % Check
-        % F3;
+        % F3
         
         % Bring one shoot in half the distance between the teo
         
@@ -121,19 +109,15 @@ function [eta, y] = shooting_gotler(gotler,deltaeta,zero,a,b,con,...
         % Renforce conditions and rerun RK solver on loop adjusting 
         % to compensate for average overshooting root
         
-        if (type(1)=='f')
-           a3 = [con(1) shoot3];            
-        else
-           a3 = [shoot3 con(1)];            
-        end           
+        a3 = [bcs(1) shoot3];                      
         
         [eta, F3] = RK(a,b,deltaeta,a3,gotler,baseT,baseTdash,baseU,kappa,...
-            betag,sigma,intbaseT);
+            beta,khat,intbaseT);
         
         % Check
         % F3(r,end);
         
-        y = F3; F3 = F3(r,end) - con(2); 
+        v = F3; F3 = F3(r,end) - bcs(2); 
         if (F1*F3 < 0)
             shoot2 = shoot3; F2 = F3;            
         elseif (F1*F2 < 0)
@@ -146,11 +130,12 @@ function [eta, y] = shooting_gotler(gotler,deltaeta,zero,a,b,con,...
     
     % Plotting of solutions 
     
-    size(eta)
+    % Check 
+    % size(eta);
     
     figure('position', [0,0,800,800]); 
-    plot(eta,y(1,:),'k-','LineWidth',2); hold on; 
-    plot(eta,y(2,:),'r-','LineWidth',2); 
+    plot(eta,v(1,:),'k-','LineWidth',2); hold on; 
+    plot(eta,v(2,:),'r-','LineWidth',2); 
     set(gca,'Fontsize',20)
     l1=legend('$v_0(\eta)$','$v_{0\eta}(\eta)$');
     set(l1, 'Interpreter','LaTex','Fontsize',30);
