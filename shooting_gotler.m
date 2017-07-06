@@ -75,17 +75,16 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
 
     tic; % Begin time
     
-    % If my number of arguements is 8 then initial guesses gave been 
-    % specified if not take these to be -1 and 1.
+    % Number of arguements is 8 then initial guesses gave been 
+    % specified if not take these to be -10 and 10.
     
     if nargin == 10
         shoot1 = init(1); shoot2 = init(2);
     else
-        shoot1 = -10; shoot2 = 10;
+        shoot1 = -10; shoot2 = 5;
     end
     
-    % Sets up boundary condition vectors, with the first entries being
-    % the know dirichlet conditions and the second the two shoots
+    % Sets up boundary condition vectors
     
     a1 = [bcs(1) shoot1];
     a2 = [bcs(1) shoot2]; 
@@ -114,9 +113,12 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     
     F3 = F1;
     
-    % Iteration to home in on axis crossing 
+    % Iteration to home in on axis crossing
     
-    while (abs(F3) > tol) 
+    % Initialise
+    shoot3=0;
+    
+    while (abs(shoot3-shoot1) & abs(shoot3-shoot2) > tol) 
         
         % Check
         % F3
@@ -124,7 +126,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
         % Bring one shoot in half the distance between the teo
         
         shoot3 = (shoot1 + shoot2)/2;
-        
+
         % Renforce conditions and rerun RK solver on loop adjusting 
         % to compensate for average overshooting root
         
@@ -161,7 +163,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
         'LaTex','Fontsize',40)
     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([1,7])
+    xlim([a,b])
     grid on
     hold off;
     toc
