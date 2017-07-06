@@ -46,12 +46,11 @@
 %                         Output eigenfuntion                          %
 
 function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
-    init) 
+    init,beta,khat) 
 
     % Parameters and base flow should really be put into funtion 
 
     gamma=1.4; Pr=1; C=0.509; D=1; etab=1; kappa=1;
-    beta=1; khat=0.1;
     
     % Solve for the base flow 
     
@@ -62,7 +61,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     % If my number of arguements is 8 then initial guesses gave been 
     % specified if not take these to be -1 and 1.
     
-    if nargin == 9
+    if nargin == 10
         shoot1 = init(1); shoot2 = init(2);
     else
         shoot1 = -5; shoot2 = 10;
@@ -71,21 +70,26 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     % Sets up boundary condition vectors, with the first entries being
     % the know dirichlet conditions and the second the two shoots
     
-    a1 = [bcs(1) shoot1];
-    a2 = [bcs(1) shoot2]; 
+    a1 = [bcs(1) shoot1]
+    a2 = [bcs(1) shoot2] 
     
     % Now iterate solution outwards using Rk method 
     
     [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,baseU,kappa,beta,...
         khat,intbaseT); 
     [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,baseU,kappa,beta,...
-        khat,intbaseT);         
+        khat,intbaseT);  
+    
+    beta 
+    khat
     
     F1 = F1(1,end) - bcs(2);
     F2 = F2(1,end) - bcs(2);
     r = 1;
 
     % Identify if as root is possible by checking for sign change
+    
+    F1*F2
     
     if (F1*F2 > 0) 
         error('The root of F function does not exist')
