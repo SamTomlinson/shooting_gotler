@@ -1,4 +1,4 @@
-function [eta,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,etab,deltaeta,a,b)
+function [eta,baseT,baseTdash,baseU,baseV,baseVdash,intbaseT]= baseflow(C,Pr,D,etab,deltaeta,a,b)
     
 dydx=@(eta,z)[z(2);z(3);(-eta*z(3)+ (((C+1)*(C-z(4)*z(5)))/(2*sqrt(z(4))*(C+z(4))^2))*z(3))/(((1+C)*sqrt(z(4)))/(z(4)+C)); ...
     z(5);(-eta*z(5) + (Pr^-1)*(((C+1)*(C-z(4)*z(5)))/(2*sqrt(z(4))*(C+z(4))^2))*z(5))/((Pr^-1)*((1+C)*sqrt(z(4)))/(z(4)+C))];
@@ -12,8 +12,12 @@ solint=bvpinit(a:deltaeta:b,zint);
 S=bvp4c(dydx,BC,solint);
     
 eta=S.x; baseT=S.y(4,:); baseTdash=S.y(5,:); intbaseT=trapz(baseT);
- 
-baseU=S.y(2,:);
+
+baseU=S.y(2,:); baseV=-baseT.*S.y(1,:); baseVdash=baseV;
+
+for i=2:length(baseV)-1
+    baseVdash(i)=(baseV(i+1)-baseV(i-1))/(2*(eta(2)-eta(1)));
+end
 
 figure('position', [0,0,800,800]); 
 plot(eta,baseT,'LineWidth',2); 
@@ -27,6 +31,14 @@ figure('position', [0,0,800,800]);
 plot(eta,baseU,'LineWidth',2); 
 set(gca,'Fontsize',20)
 ylabel('Vel. in adj. region, $U_1$','Interpreter', 'LaTex','Fontsize',40)
+xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
+xlim([a,b])
+grid on
+
+figure('position', [0,0,800,800]); 
+plot(eta,baseV,'LineWidth',2); 
+set(gca,'Fontsize',20)
+ylabel('Vel. in adj. region, $V_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
 xlim([a,b])
 grid on

@@ -66,12 +66,12 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
 
     % Parameters and base flow should really be put into funtion 
 
-    gamma=1.4; Pr=1; C=0.509; D=1; etab=1; kappa=0.1;
+    gamma=1.4; Pr=1; C=0.509; D=1; etab=1; kappa=100;
     
     % Solve for the base flow 
     
-    [~,baseT,baseTdash,baseU,intbaseT]= baseflow(C,Pr,D,etab,deltaeta,...
-                                        a,b);
+    [~,baseT,baseTdash,baseU,baseV,baseVdash,intbaseT]= ...
+        baseflow(C,Pr,D,etab,deltaeta,a,b);
 
     tic; % Begin time
     
@@ -81,7 +81,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     if nargin == 9
         shoot1 = init(1); shoot2 = init(2);
     else
-        shoot1 = -5; shoot2 = 10;
+        shoot1 = -2; shoot2 = 1;
     end
     
     % Sets up boundary condition vectors
@@ -91,14 +91,13 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
     
     % Now iterate solution outwards using Rk method 
     
-    [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,baseU,kappa,...
-        beta,khat,intbaseT); 
-    [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,baseU,kappa,...
-        beta,khat,intbaseT); 
+    [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,baseU,...
+    baseV,baseVdash,kappa,beta,khat,intbaseT); 
+    [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,baseU,...
+    baseV,baseVdash,kappa, beta,khat,intbaseT); 
     
     figure()
-    plot(eta,F1); hold on;
-    plot(eta,F2); hold off;
+    plot(eta,F2(1,:));
     
     F1 = F1(1,end) - bcs(2);
     F2 = F2(1,end) - bcs(2);
@@ -133,7 +132,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
         a3 = [bcs(1) shoot3];                      
         
         [eta, F3] = RK(a,b,deltaeta,a3,gotler,baseT,baseTdash,baseU,...
-            kappa,beta,khat,intbaseT);
+            baseV,baseVdash,kappa,beta,khat,intbaseT);
         
         % Check
         % F3(r,end);
