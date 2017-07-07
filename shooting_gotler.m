@@ -66,7 +66,7 @@ function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
 
     % Parameters and base flow should really be put into funtion 
 
-    gamma=1.4; Pr=1; C=0.509; D=1; etab=1; kappa=100;
+    gamma=1.4; Pr=1; C=0.509; D=1; etab=1; kappa=1;
     
     % Solve for the base flow 
     
