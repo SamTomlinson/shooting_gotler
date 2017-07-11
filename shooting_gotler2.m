@@ -68,7 +68,7 @@ function [eta, v,kval] = shooting_gotler2(gotler,deltaeta,tol,a,b,eigval,init)
     
     % Loop through different khat values 
     
-    for shoot1=0.1:0.001:8
+    for shoot1=0.1:0.00001:8
         
         shoot1;
         % Far field boudary condition 
@@ -99,7 +99,7 @@ function [eta, v,kval] = shooting_gotler2(gotler,deltaeta,tol,a,b,eigval,init)
     ylabel('Near field error, $H(\hat{k})$','Interpreter',...
         'LaTex','Fontsize',40)
     xlabel('Wavenumber, $\hat{k}$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([0.1,8])
+    xlim([a,8])
     grid on
     hold off;
     
@@ -134,6 +134,17 @@ function [eta, v,kval] = shooting_gotler2(gotler,deltaeta,tol,a,b,eigval,init)
     l1=legend('$v_0(\eta)$','$v_{0\eta}(\eta)$');
     set(l1, 'Interpreter','LaTex','Fontsize',30);
     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
+        'LaTex','Fontsize',40)
+    xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+    xlim([a,b])
+    grid on
+    hold off;
+    toc
+    
+    figure('position', [0,0,800,800]); 
+    plot(eta,-baseTdash.*v(1,:)./baseT,'k-','LineWidth',2);
+    set(gca,'Fontsize',20)
+     ylabel('Temp. in the temp. adj. region $T_0$','Interpreter',...
         'LaTex','Fontsize',40)
     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
     xlim([a,b])
