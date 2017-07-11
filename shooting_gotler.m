@@ -61,110 +61,138 @@
 
 
 
-function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,bcs,...
-    beta,khat,init) 
+function [eta, v] = shooting_gotler(gotler,deltaeta,tol,a,b,eigval,init) 
 
     % Parameters and base flow should really be put into funtion 
 
-    gamma=1.4; Pr=1; C=0.509; D=1; etab=1; kappa=1;
+    gamma=1.4; Pr=1; C=0.509; D=1; etab=1;
+    eta=a:deltaeta:b; A=3*(1+C)/Pr;
+    
     
     % Solve for the base flow 
     
-    [~,baseT,baseTdash,baseU,baseV,baseVdash,intbaseT]= ...
-        baseflow(C,Pr,D,etab,deltaeta,a,b);
+    [~,baseT,baseTdash]=baseflow(C,Pr,D,1,deltaeta,a,b);
 
     tic; % Begin time
     
-    % Number of arguements is 8 then initial guesses gave been 
-    % specified if not take these to be -10 and 10.
+    % Initial shoots
     
-    if nargin == 9
-        shoot1 = init(1); shoot2 = init(2);
-    else
-        shoot1 = -2; shoot2 = 1;
-    end
+    shoot1 = 0.1; shoot2 = 8;
     
-    % Sets up boundary condition vectors
+    % Sets up far field conditions
     
-    a1 = [bcs(1) shoot1];
-    a2 = [bcs(1) shoot2]; 
+    a1 = [exp(-shoot1*b), -shoot1*exp(shoot1*b)];
+    a2 = [exp(-shoot2*b), -shoot2*exp(shoot2*b)];
     
-    % Now iterate solution outwards using Rk method 
     
-    [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,baseU,...
-    baseV,baseVdash,kappa,beta,khat,intbaseT); 
-    [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,baseU,...
-    baseV,baseVdash,kappa, beta,khat,intbaseT); 
+    % Now iterate solution backwards using Rk method 
     
-    figure()
-    plot(eta,F2(1,:));
+    [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,shoot1,eigval); 
+    [eta, F2] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,shoot2,eigval);
     
-    F1 = F1(1,end) - bcs(2);
-    F2 = F2(1,end) - bcs(2);
-
-    % Identify if as root is possible by checking for sign change
+    F1;
     
-    % Check 
-    % F1*F2
+    % Calculate boundary decay 
     
-    if (F1*F2 > 0) 
+    H1=F1(2,1)-(shoot1*A^2/(a^4))*F1(1,1);
+    H2=F2(2,1)-(shoot2*A^2/(a^4))*F2(1,1);
+    
+    % Notify of errors
+    
+    if (H1*H2 > 0) 
         error('The root does not exist')
     end
     
     % Set one shoot for iteration 
     
-    F3 = F1;
-   
+    H3 = H1;
+    
     % Iteration to home in on axis crossing
     
-    while (abs(F3) > tol) 
-        
-        % Check
-        % F3
-        
-        % Bring one shoot in half the distance between the teo
-        
-        shoot3 = (shoot1 + shoot2)/2;
-
-        % Renforce conditions and rerun RK solver on loop adjusting 
-        % to compensate for average overshooting root
-        
-        a3 = [bcs(1) shoot3];                      
-        
-        [eta, F3] = RK(a,b,deltaeta,a3,gotler,baseT,baseTdash,baseU,...
-            baseV,baseVdash,kappa,beta,khat,intbaseT);
-        
-        % Check
-        % F3(r,end);
-        
-        v = F3; F3 = F3(1,end) - bcs(2); 
-        if (F1*F3 < 0)
-            shoot2 = shoot3; F2 = F3;            
-        elseif (F1*F3 > 0)
-            shoot1 = shoot3; F1 = F3;
-        else
-            error('Something has gone horribly wrong, probs NANS');           
-        end
-        
-    end           
+%     while (abs(H3) > tol) 
+%         
+%         H1;
+%         H2;
+%        
+         shoot3=(shoot1+shoot2)/2;
+% 
+%         Renforce conditions and rerun RK solver on loop adjusting 
+%         to compensate for average overshooting root
+%         
+         a3 = [exp(-shoot3*b), -shoot3*exp(shoot3*b)];                     
+%         
+         [eta, F3] = RK(a,b,deltaeta,a3,gotler,baseT,baseTdash,shoot3,eigval);
+%         
+%         Check
+%         F3(r,end);
+%         
+         v = F3; 
+%         
+%         H3=F3(2,1)-(shoot3*A^2/(a^4))*F3(1,1)
+%     
+%         if (H3 < 0)
+%             shoot1 = shoot3;
+%             F1 = F3;  
+%             H1 = H3;
+%         elseif (H3 > 0)
+%             shoot2 = shoot3;
+%             F2 = F3;
+%             H2 = H3;
+%         else
+%             error('Something has gone horribly wrong, probs NANS');           
+%         end
+%         
+%         size(v);
+%         size(eta);
+%         
+%         khat=shoot3;
+%         
+%     end 
+    
+    % Different sort of attempt
+    
+    vec=[];
+    kvec=[];
+    for shoot1=-1:0.001:1
+    a1 = [exp(-shoot1*b), -shoot1*exp(-shoot1*b)];
+    [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,shoot1,eigval);     
+    H1=F1(2,1)-((shoot1*A^2)/(a^4))*F1(1,1);
+    H2=F1(2,length(F1(2,:))) + shoot1*F1(1,length(F1(2,:)));
+    vec=[H1,vec];
+    kvec=[shoot1,kvec];
+    if shoot1==-0.5
+    display('25percentage completed')
+    elseif shoot1==0
+    display('50percentage completed')
+    elseif shoot1==0.5
+    display('75percentage completed')
+    elseif shoot1==1
+    display('100percentage completed')
+    end 
+    end
+    plot(kvec,vec);
+    tmp = abs(vec-0)
+    [idx, idx] = min(tmp) %index of closest value
+    closest = vec(idx)
+    kval= kvec(idx)
     
     % Plotting of solutions 
     
     % Check 
     % size(eta);
     
-    figure('position', [0,0,800,800]); 
-    plot(eta,v(1,:),'k-','LineWidth',2); hold on; 
-    plot(eta,v(2,:),'r-','LineWidth',2); 
-    set(gca,'Fontsize',20)
-    l1=legend('$v_0(\eta)$','$v_{0\eta}(\eta)$');
-    set(l1, 'Interpreter','LaTex','Fontsize',30);
-    ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
-        'LaTex','Fontsize',40)
-    xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([a,b])
-    grid on
-    hold off;
+%     figure('position', [0,0,800,800]); 
+%     plot(eta,v(1,:),'k-','LineWidth',2); hold on; 
+%     plot(eta,v(2,:),'r-','LineWidth',2); 
+%     set(gca,'Fontsize',20)
+%     l1=legend('$v_0(\eta)$','$v_{0\eta}(\eta)$');
+%     set(l1, 'Interpreter','LaTex','Fontsize',30);
+%     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
+%         'LaTex','Fontsize',40)
+%     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+%     xlim([a,b])
+%     grid on
+%     hold off;
     toc
     
 end
