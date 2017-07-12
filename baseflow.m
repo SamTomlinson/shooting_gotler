@@ -7,9 +7,9 @@ BC=@(za,zb)[za(1) - D/(etab^(3/Pr)) ; zb(2) ; za(2) + (3/Pr)*D/etab^((3/Pr)-1); 
     
 zint=@(x)[0 ; 1; 0 ; 1 ; 0];
     
-size(a:deltaeta:b);
+size(a:deltaeta*10:b);
 
-solint=bvpinit(a:deltaeta:b,zint);
+solint=bvpinit(a:deltaeta*10:b,zint);
     
 S=bvp4c(dydx,BC,solint);
     
@@ -23,19 +23,19 @@ baseTdash = interp1(eta,baseTdash,a:deltaeta:b,'spline');
 baseU = interp1(eta,baseU,a:deltaeta:b,'spline');
 eta=a:deltaeta:b;
 
-figure('position', [0,0,800,800]); 
-plot(eta,baseT,'LineWidth',2); 
-set(gca,'Fontsize',20)
-ylabel('Temp. in adj. region, $T_1$','Interpreter', 'LaTex','Fontsize',40)
-xlabel('Wall layer variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
-grid on
+% figure('position', [0,0,800,800]); 
+% plot(eta,baseT,'LineWidth',2); 
+% set(gca,'Fontsize',20)
+% ylabel('Temp. in adj. region, $T_1$','Interpreter', 'LaTex','Fontsize',40)
+% xlabel('Wall layer variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+% xlim([a,b])
+% grid on
 
-figure('position', [0,0,800,800]); 
-plot(eta,baseU,'LineWidth',2); 
-set(gca,'Fontsize',20)
-ylabel('Vel. in adj. region, $U_1$','Interpreter', 'LaTex','Fontsize',40)
-xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
-grid on
+% figure('position', [0,0,800,800]); 
+% plot(eta,baseU,'LineWidth',2); 
+% set(gca,'Fontsize',20)
+% ylabel('Vel. in adj. region, $U_1$','Interpreter', 'LaTex','Fontsize',40)
+% xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
+% xlim([a,b])
+% grid on
     
