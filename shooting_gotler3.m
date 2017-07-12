@@ -68,7 +68,7 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     
     % Loop through different khat values 
     
-    for shoot1=0.01:0.02:0.6
+    for shoot1=0.01:0.01:0.6
         
         % Far field boudary condition 
         
