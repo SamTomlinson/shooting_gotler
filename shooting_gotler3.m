@@ -49,7 +49,7 @@
 
 
 
-function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat) 
+function [eta, v,eignew] = shooting_gotler3(gotler,deltaeta,a,b,khat) 
 
     % Parameters and base flow should really be put into funtion 
 
@@ -74,10 +74,12 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
         % Far field boudary condition 
         
         a1 = [exp(-khat*b), -khat*exp(-khat*b)];
+        a2 = [exp(-khat*A^2/(3*a^3)), khat*A^2/(a^4)*exp(-khat*A^2/(3*a^3))];
         
         % Runge kutta inwards
         
-        [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,shoot1);     
+        [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,shoot1);
+        %[~, F1] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,khat,shoot1);
     
         % Boundary condition constraints
         
@@ -91,6 +93,7 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     
     end
     
+    
 % Plot H vs eig
     
     figure('position', [0,0,800,800]); 
@@ -98,13 +101,13 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     set(gca,'Fontsize',20)
     ylabel('Near field error, $H(\hat{k})$','Interpreter',...
         'LaTex','Fontsize',40)
-    xlabel('Wavenumber, $\hat{k}$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([0.1,0.5])
+    xlabel('Eig. val., $\beta^2(G^*-Q)$','Interpreter', 'LaTex','Fontsize',40)
+    xlim([0.01,0.6])
     %ylim([-1,1])
     grid on
     hold off;
    
-% Calculate the corssing points
+% Calculate the crossing points
     
 zerIdx=[];
 for i=1:length(vec)-1
@@ -115,16 +118,31 @@ end
 
 % Take last crossing
 
-eigs=eigvec(zerIdx)
 
-eigval=eigs(1);
+eigs=eigvec(zerIdx);
+vecs=vec(zerIdx);
+zerIdx(1)-1;
+eigvalright=eigvec(zerIdx(1)-1);
+eigvalleft=eigvec(zerIdx(1)+1);
+vecsright=vec(zerIdx(1)-1);
+vecsleft=vec(zerIdx(1)+1);
+grad=(vecsleft-vecsright)/(eigvalleft-eigvalright);
+angle=pi/2+atan(grad);
+radtodeg(angle);
+deltaev=vecsleft*tan(angle);
+eignew=eigval+deltaev;
+
+
+
+
+
     
 % Calculation of eigenmodes 
     
 a1 = [exp(-khat*b), -khat*exp(-khat*b)];
-[eta, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,eigval);     
-H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1)
-H2=F1(2,length(F1(2,:))) + khat*F1(1,length(F1(2,:)))
+[eta, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,eignew);     
+H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1);
+H2=F1(2,length(F1(2,:))) + khat*F1(1,length(F1(2,:)));
 v=F1;
 
 % Plotting of eigenomdes (if running evvsk % out)
