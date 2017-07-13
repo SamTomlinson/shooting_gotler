@@ -49,11 +49,11 @@
 
 
 
-function [eta, v,eignew] = shooting_gotler3(gotler,deltaeta,a,b,khat) 
+function [eta, v,eignew1] = shooting_gotler3(gotler,deltaeta,a,b,khat) 
 
     % Parameters and base flow should really be put into funtion 
 
-    Pr=1; C=0.509; D=1; A=3*(1+C)/Pr;
+    Pr=1; C=0.509; D=1; A=3*(1+C)/Pr; tol=1e-6;
     
     % Solve for the base flow 
     
@@ -69,7 +69,7 @@ function [eta, v,eignew] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     
     % Loop through different khat values 
     
-    for shoot1=0.01:0.01:0.6
+    for shoot1=0.01:0.001:0.6
         
         % Far field boudary condition 
         
@@ -116,12 +116,10 @@ for i=1:length(vec)-1
     end
 end
 
-% Take last crossing
-
+% Improve accuracy 
 
 eigs=eigvec(zerIdx);
 vecs=vec(zerIdx);
-zerIdx(1)-1;
 eigvalright=eigvec(zerIdx(1)-1);
 eigvalleft=eigvec(zerIdx(1)+1);
 vecsright=vec(zerIdx(1)-1);
@@ -130,33 +128,27 @@ grad=(vecsleft-vecsright)/(eigvalleft-eigvalright);
 angle=pi/2+atan(grad);
 radtodeg(angle);
 deltaev=vecsleft*tan(angle);
-eignew=eigval+deltaev;
-
-
-
-
-
-    
+delta2ev=vecsright*tan(angle);
+eignew1=eigvalleft+deltaev;
+eignew2=eigvalright+delta2ev;
+   
 % Calculation of eigenmodes 
     
 a1 = [exp(-khat*b), -khat*exp(-khat*b)];
-[eta, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,eignew);     
-H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1);
-H2=F1(2,length(F1(2,:))) + khat*F1(1,length(F1(2,:)));
+[eta, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,eignew1);     
+H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1)
+H2=F1(2,length(F1(2,:))) + khat*F1(1,length(F1(2,:)))
 v=F1;
 
 % Plotting of eigenomdes (if running evvsk % out)
 
     figure('position', [0,0,800,800]); 
-    plot(eta,v(1,:),'k-','LineWidth',2); hold on; 
-    plot(eta,v(2,:),'r-','LineWidth',2); 
+    plot(eta,v(1,:),'LineWidth',2); 
     set(gca,'Fontsize',20)
-    l1=legend('$v_0(\eta)$','$v_{0\eta}(\eta)$');
-    set(l1, 'Interpreter','LaTex','Fontsize',30);
     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
         'LaTex','Fontsize',40)
     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([a,b])
+    xlim([0.1,b])
     grid on
     hold off;
     
@@ -166,7 +158,7 @@ v=F1;
      ylabel('Temp. in the temp. adj. region $T_0$','Interpreter',...
         'LaTex','Fontsize',40)
     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([a,b])
+    xlim([0.1,b])
     grid on
     hold off;
     toc

@@ -136,8 +136,8 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
-ylim([0,5])
+xlim([0.5,b])
+
 grid on
 hold off;
     
@@ -152,8 +152,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Temp. in the temp. adj. region $T_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
-ylim([0,5])
+xlim([0.5,b])
 grid on
 hold off;
 
@@ -168,8 +167,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $u_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
-ylim([0,5])
+xlim([0.5,b])
 grid on
 hold off;
 
