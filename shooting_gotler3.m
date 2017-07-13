@@ -124,6 +124,7 @@ eigvalright=eigvec(zerIdx(1)-1);
 eigvalleft=eigvec(zerIdx(1)+1);
 vecsright=vec(zerIdx(1)-1);
 vecsleft=vec(zerIdx(1)+1);
+eigval=eigs(1);
 
 
 % eigvalright=0.342; eigvalleft=0.34;  vecsright=-1.426036221091628e+08;
@@ -146,20 +147,15 @@ end
 
 eigval=eigvalleft;
 
-%%%%%%%%%%%%% Repeat
+% Improve accuracy 
+diff=1;
 
-[eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
+while abs(diff>1e-16)
+    eigvalold=eigval;
+    [eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
     baseTdash,shoot1);
-[eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
-    baseTdash,shoot1);
-[eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
-    baseTdash,shoot1);
-[eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
-    baseTdash,shoot1);
-[eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
-    baseTdash,shoot1);
-[eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
-    baseTdash,shoot1);
+    diff=abs(eigvalold-eigval);
+end
 
 
        
@@ -173,15 +169,15 @@ v=F1;
 
 % Plotting of eigenomdes (if running evvsk % out)
 
-%     figure('position', [0,0,800,800]); 
-%     plot(eta,v(1,:),'LineWidth',2); 
-%     set(gca,'Fontsize',20)
-%     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
-%         'LaTex','Fontsize',40)
-%     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-%     xlim([0.1,b])
-%     grid on
-%     hold off;
+    figure('position', [0,0,800,800]); 
+    plot(eta,v(1,:),'LineWidth',2); 
+    set(gca,'Fontsize',20)
+    ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
+        'LaTex','Fontsize',40)
+    xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+    xlim([0.1,b])
+    grid on
+    hold off;
 %     
 %     figure('position', [0,0,800,800]); 
 %     plot(eta,-baseTdash.*v(1,:)./baseT,'k-','LineWidth',2);

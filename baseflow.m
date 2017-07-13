@@ -33,7 +33,7 @@
 
 
 
-%                         Output eigenfuntion                          %
+%                         Output base flow solve                        %
 
 
 
