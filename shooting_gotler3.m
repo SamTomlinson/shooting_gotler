@@ -49,7 +49,7 @@
 
 
 
-function [eta, v,eignew1] = shooting_gotler3(gotler,deltaeta,a,b,khat) 
+function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat) 
 
     % Parameters and base flow should really be put into funtion 
 
@@ -124,20 +124,107 @@ eigvalright=eigvec(zerIdx(1)-1);
 eigvalleft=eigvec(zerIdx(1)+1);
 vecsright=vec(zerIdx(1)-1);
 vecsleft=vec(zerIdx(1)+1);
-grad=(vecsleft-vecsright)/(eigvalleft-eigvalright);
-angle=pi/2+atan(grad);
-radtodeg(angle);
-deltaev=vecsleft*tan(angle);
-delta2ev=vecsright*tan(angle);
-eignew1=eigvalleft+deltaev;
-eignew2=eigvalright+delta2ev;
+
+
+% eigvalright=0.342; eigvalleft=0.34;  vecsright=-1.426036221091628e+08;
+% vecsleft=1.677088912688837e+06;
+
+% Iterate in 
+
+while (vecsleft>1e-16)
+eignew=(eigvalleft+eigvalright)/2;
+vecnew=(vecsleft+vecsright)/2;
+if vecnew<0
+    eigvalright=eignew;
+    vecsright=vecnew;
+end
+if vecnew>0
+    eigvalleft=eignew;
+    vecsleft=vecnew;
+end
+end
+
+eigval=eigvalleft;
+
+%%%%%%%%%%%%% Repeat
+
+    % Initialise vectors
+    
+    vec=[]; eigvec=[];
+    
+    % Loop through different khat values 
+    
+    for shoot1=eigval-1e-4:1e-5:eigval+1e-4
+        
+        % Far field boudary condition 
+        
+        a1 = [exp(-khat*b), -khat*exp(-khat*b)];
+        a2 = [exp(-khat*A^2/(3*a^3)), khat*A^2/(a^4)*exp(-khat*A^2/(3*a^3))];
+        
+        % Runge kutta inwards
+        
+        [~, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,shoot1);
+        %[~, F1] = RK(a,b,deltaeta,a2,gotler,baseT,baseTdash,khat,shoot1);
+    
+        % Boundary condition constraints
+        
+        H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1);
+        
+        H2=F1(2,end) + khat*F1(1,end);
    
+        % Vector of H error and ks
+        
+        vec=[H1,vec]; eigvec=[shoot1,eigvec];
+    
+    end
+   
+% Calculate the crossing points
+    
+zerIdx=[];
+for i=1:length(vec)-1
+    if ((vec(i)>0 && vec(i+1)<0) || (vec(i)<0 && vec(i+1)>0))
+    zerIdx(end+1)=i; % save index of zero-crossing
+    end
+end
+
+% Improve accuracy 
+
+eigs=eigvec(zerIdx);
+vecs=vec(zerIdx);
+eigvalright=eigvec(zerIdx(1)-1);
+eigvalleft=eigvec(zerIdx(1)+1);
+vecsright=vec(zerIdx(1)-1);
+vecsleft=vec(zerIdx(1)+1);
+
+
+% eigvalright=0.342; eigvalleft=0.34;  vecsright=-1.426036221091628e+08;
+% vecsleft=1.677088912688837e+06;
+
+% Iterate in 
+
+while (vecsleft>1e-16)
+eignew=(eigvalleft+eigvalright)/2;
+vecnew=(vecsleft+vecsright)/2;
+if vecnew<0
+    eigvalright=eignew;
+    vecsright=vecnew;
+end
+if vecnew>0
+    eigvalleft=eignew;
+    vecsleft=vecnew;
+end
+end
+
+eigval=eigvalleft;
+
+%%%%%%%%%%%%% end repeat
+       
 % Calculation of eigenmodes 
     
 a1 = [exp(-khat*b), -khat*exp(-khat*b)];
-[eta, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,eignew1);     
-H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1)
-H2=F1(2,length(F1(2,:))) + khat*F1(1,length(F1(2,:)))
+[eta, F1] = RK(a,b,deltaeta,a1,gotler,baseT,baseTdash,khat,eigval);     
+H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1);
+H2=F1(2,length(F1(2,:))) + khat*F1(1,length(F1(2,:)));
 v=F1;
 
 % Plotting of eigenomdes (if running evvsk % out)
