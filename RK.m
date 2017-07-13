@@ -1,16 +1,56 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 RK                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%                           Code description                          %
+
+
+
+% Uses a fourth order runge kutta method to march backward/forward in 
+% time to get solution at opposite boudary
+
+
+
+%                                 Key                                 % 
+%
+% eta - grid points
+%
+% v - v0 and v0dash array 
+%
+% gotler - function containing de for gotler
+%
+% deltaeta - step size
+%
+% bcs - values of boundary conditions (2D vector)
+%
+% a,b - two ends of the domain
+% 
+% k - spanwise wavenumber
+% 
+% eigval - eigenvalue shoot
+
+% base flow - baseT, baseTdash, base U base flow vectors and derivatives
+% intbaseT integral for Q term in DE
+
+
+
+%                             Runge Kutta                               %
+
 function [eta, v] = RK(a,b,deltaeta,bcs,gotler,baseT,baseTdash,...
     kshoot,eigval)
 
+    % Set up variables used in RK preallocate for speed
+    
     eta = a:deltaeta:b; 
     n = length(eta);
     v = zeros(length(bcs),n);
     v(:,n) = bcs;
-    %v(:,1) = bcs;
+    
+    % RK from far boundary in towards zero
     
     for k = n-1:-1:1 
-        
-        size(eta);
-        size(baseT);
         
         k1 = gotler(eta(k+1),v(:,k+1),baseT(k+1),baseTdash(k+1),kshoot,eigval);
 
@@ -26,17 +66,3 @@ function [eta, v] = RK(a,b,deltaeta,bcs,gotler,baseT,baseTdash,...
         v(:,k)=v(:,k+1)-deltaeta*(k1'+2.*k2'+2.*k3'+k4')./6;
         
     end
-
-        
-%     for k = 1:(n-1) 
-%         k1 = gotler(eta(k),v(:,k),baseT(k),baseTdash(k),kshoot,eigval);
-%         k2 = gotler(eta(k)+0.5*deltaeta,v(:,k)+0.5*deltaeta.*k1',baseT(k),...
-%              baseTdash(k),kshoot,eigval);
-%         k3 = gotler(eta(k)+0.5*deltaeta,v(:,k)+0.5*deltaeta.*k2',baseT(k),...
-%              baseTdash(k),kshoot,eigval);
-%         k4 = gotler(eta(k)+deltaeta,v(:,k)+deltaeta.*k3',baseT(k),baseTdash(k),...
-%              kshoot,eigval);
-%         v(:,k+1)=v(:,k)+deltaeta*(k1'+2*k2'+2*k3'+k4')/6;
-%     end
-    
- 
