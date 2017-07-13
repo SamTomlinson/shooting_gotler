@@ -13,7 +13,7 @@
 
 
 
-
+close all
 %                                 Key                                 % 
 %
 % eta - grid points
@@ -135,7 +135,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([0.1,b])
+xlim([a,b])
 
 grid on
 hold off;
@@ -150,7 +150,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Temp. in the temp. adj. region $T_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([0.1,b])
+xlim([a,b])
 grid on
 hold off;
 
@@ -164,35 +164,35 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $u_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([0.1,b])
+xlim([a,b])
 grid on
 hold off;
 
 figure('position', [0,0,800,800]); 
-plot(eta,-dv1./(0.5*baseT),'LineWidth',2); hold on; 
-plot(eta,-dv2./(1*baseT),'LineWidth',2); 
-plot(eta,-dv3./(2*baseT),'LineWidth',2); 
+plot(eta,-dv1./(0.5.*baseT),'LineWidth',2); hold on; 
+plot(eta,-dv2./(1.*baseT),'LineWidth',2); 
+plot(eta,-dv3./(2.*baseT),'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $w_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([0.1,b])
+xlim([a,b])
 grid on
 hold off;
 
 figure('position', [0,0,800,800]); 
-plot(eta,-dv1./(0.5^2*baseT^2),'LineWidth',2); hold on; 
-plot(eta,-dv2./(1^2*baseT^2),'LineWidth',2); 
-plot(eta,-dv3./(2^2*baseT^2),'LineWidth',2); 
+plot(eta,-dv1./(0.5.^2.*baseT.^2),'LineWidth',2); hold on; 
+plot(eta,-dv2./(1.^2.*baseT.^2),'LineWidth',2); 
+plot(eta,-dv3./(2.^2.*baseT.^2),'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Pres. in the temp. adj. region $p_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([0.1,b])
+xlim([a,b])
 grid on
 hold off;
 
