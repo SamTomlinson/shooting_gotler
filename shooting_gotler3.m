@@ -96,16 +96,16 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     
 % Plot H vs eig
     
-    figure('position', [0,0,800,800]); 
-    plot(eigvec,vec,'k-','LineWidth',2); 
-    set(gca,'Fontsize',20)
-    ylabel('Near field error, $H(\hat{k})$','Interpreter',...
-        'LaTex','Fontsize',40)
-    xlabel('Eig. val., $\beta^2(G^*-Q)$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([0.01,0.6])
-    %ylim([-1,1])
-    grid on
-    hold off;
+%     figure('position', [0,0,800,800]); 
+%     plot(eigvec,vec,'k-','LineWidth',2); 
+%     set(gca,'Fontsize',20)
+%     ylabel('Near field error, $H(\hat{k})$','Interpreter',...
+%         'LaTex','Fontsize',40)
+%     xlabel('Eig. val., $\beta^2(G^*-Q)$','Interpreter', 'LaTex','Fontsize',40)
+%     xlim([0.01,0.6])
+%     %ylim([-1,1])
+%     grid on
+%     hold off;
    
 % Calculate the crossing points
     
@@ -150,11 +150,13 @@ eigval=eigvalleft;
 % Improve accuracy 
 diff=1;
 
+tol=0.1;
 while abs(diff>1e-16)
     eigvalold=eigval;
     [eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
-    baseTdash,shoot1);
+    baseTdash,shoot1,tol);
     diff=abs(eigvalold-eigval);
+    tol=tol/10;
 end
 
 

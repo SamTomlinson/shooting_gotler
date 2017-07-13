@@ -64,7 +64,7 @@ ev=[];
 
 % Loop through different wavenumbers and calculate ev
 
-for k=0.5:0.1:8
+for k=0.5:0.5:8
     
     k
     
