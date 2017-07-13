@@ -80,16 +80,16 @@ for k=0.5:0.5:8
     
     if k==0.5
         v1=v(1,:);
+        dv1=v(2,:);
+    end
+    if k==1
+        v2=v(1,:);
+        dv2=v(2,:);
     end
     if k==2
-        v2=v(1,:);
-    end
-    if k==5
         v3=v(1,:);
-    end
-    if k==8
-       v5=v(1,:);
-    end       
+        dv3=v(2,:);
+    end     
 end
 
 % Reverse ev order as come out the wrong way round
@@ -129,14 +129,13 @@ figure('position', [0,0,800,800]);
 plot(eta,v1,'LineWidth',2); hold on; 
 plot(eta,v2,'LineWidth',2);  
 plot(eta,v3,'LineWidth',2); 
-plot(eta,v5,'LineWidth',2); 
 set(gca,'Fontsize',20)
-l1=legend('$k=0.5$','$k=1$','$k=2$','$k=5$');
+l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([0.5,b])
+xlim([0.1,b])
 
 grid on
 hold off;
@@ -145,14 +144,13 @@ figure('position', [0,0,800,800]);
 plot(eta,-baseTdash.*v1./baseT,'LineWidth',2); hold on; 
 plot(eta,-baseTdash.*v2./baseT,'LineWidth',2); 
 plot(eta,-baseTdash.*v3./baseT,'LineWidth',2); 
-plot(eta,-baseTdash.*v5./baseT,'LineWidth',2); 
 set(gca,'Fontsize',20)
-l1=legend('$k=0.5$','$k=1$','$k=2$','$k=5$');
+l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Temp. in the temp. adj. region $T_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([0.5,b])
+xlim([0.1,b])
 grid on
 hold off;
 
@@ -160,14 +158,41 @@ figure('position', [0,0,800,800]);
 plot(eta,-baseUdash.*v1./baseT,'LineWidth',2); hold on; 
 plot(eta,-baseUdash.*v2./baseT,'LineWidth',2); 
 plot(eta,-baseUdash.*v3./baseT,'LineWidth',2); 
-plot(eta,-baseUdash.*v5./baseT,'LineWidth',2); 
 set(gca,'Fontsize',20)
-l1=legend('$k=0.5$','$k=1$','$k=2$','$k=5$');
+l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $u_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([0.5,b])
+xlim([0.1,b])
+grid on
+hold off;
+
+figure('position', [0,0,800,800]); 
+plot(eta,-dv1./(0.5*baseT),'LineWidth',2); hold on; 
+plot(eta,-dv2./(1*baseT),'LineWidth',2); 
+plot(eta,-dv3./(2*baseT),'LineWidth',2); 
+set(gca,'Fontsize',20)
+l1=legend('$k=0.5$','$k=1$','$k=2$');
+set(l1, 'Interpreter','LaTex','Fontsize',30);
+ylabel('Vel. in the temp. adj. region $w_0$','Interpreter',...
+        'LaTex','Fontsize',40)
+xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+xlim([0.1,b])
+grid on
+hold off;
+
+figure('position', [0,0,800,800]); 
+plot(eta,-dv1./(0.5^2*baseT^2),'LineWidth',2); hold on; 
+plot(eta,-dv2./(1^2*baseT^2),'LineWidth',2); 
+plot(eta,-dv3./(2^2*baseT^2),'LineWidth',2); 
+set(gca,'Fontsize',20)
+l1=legend('$k=0.5$','$k=1$','$k=2$');
+set(l1, 'Interpreter','LaTex','Fontsize',30);
+ylabel('Pres. in the temp. adj. region $p_0$','Interpreter',...
+        'LaTex','Fontsize',40)
+xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+xlim([0.1,b])
 grid on
 hold off;
 
