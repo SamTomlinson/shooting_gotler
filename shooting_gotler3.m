@@ -169,7 +169,7 @@ H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1);
 H2=F1(2,length(F1(2,:))) + khat*F1(1,length(F1(2,:)));
 v=F1;
 
-% Set all values below zero to zero (not saure if this is allowed_
+% Set all values below zero to zero (not sure if this is allowed)
 
 v1=v(1,:);
 v1(v1<0)=0;
