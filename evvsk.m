@@ -96,10 +96,18 @@ end
 
 ev=ev(end:-1:1);
 
+
 %% Plotting
 
+% Recalculate base eta and base flow variables with correct size
+baseeta=a:deltaeta/5:b;
+baseTm = interp1(baseeta,baseT,a:deltaeta:b,'spline');
+baseTdashm = interp1(baseeta,baseTdash,a:deltaeta:b,'spline');
+baseUm = interp1(baseeta,baseU,a:deltaeta:b,'spline');
+baseUdashm = interp1(baseeta,baseUdash,a:deltaeta:b,'spline');
+
 figure('position', [0,0,800,800]); 
-plot(eta,baseT,'LineWidth',2); 
+plot(baseeta,baseT,'LineWidth',2); 
 set(gca,'Fontsize',20)
 ylabel('Temp. in adj. region, $T_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
@@ -107,7 +115,7 @@ xlim([a,b])
 grid on
 
 figure('position', [0,0,800,800]); 
-plot(eta,baseU,'LineWidth',2); 
+plot(baseeta,baseU,'LineWidth',2); 
 set(gca,'Fontsize',20)
 ylabel('Vel. in adj. region, $U_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
@@ -141,9 +149,9 @@ grid on
 hold off;
     
 figure('position', [0,0,800,800]); 
-plot(eta,-baseTdash.*v1./baseT,'LineWidth',2); hold on; 
-plot(eta,-baseTdash.*v2./baseT,'LineWidth',2); 
-plot(eta,-baseTdash.*v3./baseT,'LineWidth',2); 
+plot(eta,-baseTdashm.*v1./baseTm,'LineWidth',2); hold on; 
+plot(eta,-baseTdashm.*v2./baseTm,'LineWidth',2); 
+plot(eta,-baseTdashm.*v3./baseTm,'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
@@ -155,9 +163,9 @@ grid on
 hold off;
 
 figure('position', [0,0,800,800]); 
-plot(eta,-baseUdash.*v1./baseT,'LineWidth',2); hold on; 
-plot(eta,-baseUdash.*v2./baseT,'LineWidth',2); 
-plot(eta,-baseUdash.*v3./baseT,'LineWidth',2); 
+plot(eta,-baseUdashm.*v1./baseTm,'LineWidth',2); hold on; 
+plot(eta,-baseUdashm.*v2./baseTm,'LineWidth',2); 
+plot(eta,-baseUdashm.*v3./baseTm,'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
@@ -169,9 +177,9 @@ grid on
 hold off;
 
 figure('position', [0,0,800,800]); 
-plot(eta,-dv1./(0.5.*baseT),'LineWidth',2); hold on; 
-plot(eta,-dv2./(1.*baseT),'LineWidth',2); 
-plot(eta,-dv3./(2.*baseT),'LineWidth',2); 
+plot(eta,-dv1./(0.5.*baseTm),'LineWidth',2); hold on; 
+plot(eta,-dv2./(1.*baseTm),'LineWidth',2); 
+plot(eta,-dv3./(2.*baseTm),'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
@@ -183,9 +191,9 @@ grid on
 hold off;
 
 figure('position', [0,0,800,800]); 
-plot(eta,-dv1./(0.5.^2.*baseT.^2),'LineWidth',2); hold on; 
-plot(eta,-dv2./(1.^2.*baseT.^2),'LineWidth',2); 
-plot(eta,-dv3./(2.^2.*baseT.^2),'LineWidth',2); 
+plot(eta,-dv1./(0.5.^2.*baseTm.^2),'LineWidth',2); hold on; 
+plot(eta,-dv2./(1.^2.*baseTm.^2),'LineWidth',2); 
+plot(eta,-dv3./(2.^2.*baseTm.^2),'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);

@@ -195,15 +195,15 @@ v(1,:)=(1/v(1,maxs(1)))*v(1,:);
 
 % Plotting of eigenomdes (if running evvsk % out)
 
-    figure('position', [0,0,800,800]); 
-    plot(eta,v(1,:),'LineWidth',2); 
-    set(gca,'Fontsize',20)
-    ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
-        'LaTex','Fontsize',40)
-    xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-    xlim([0.1,b])
-    grid on
-    hold off;
+%     figure('position', [0,0,800,800]); 
+%     plot(eta,v(1,:),'LineWidth',2); 
+%     set(gca,'Fontsize',20)
+%     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
+%         'LaTex','Fontsize',40)
+%     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
+%     xlim([0.1,b])
+%     grid on
+%     hold off;
 %     
 %     figure('position', [0,0,800,800]); 
 %     plot(eta,-baseTdash.*v(1,:)./baseT,'k-','LineWidth',2);
