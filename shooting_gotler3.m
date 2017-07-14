@@ -120,10 +120,10 @@ end
 
 eigs=eigvec(zerIdx);
 vecs=vec(zerIdx);
-eigvalright=eigvec(zerIdx(1)-1);
-eigvalleft=eigvec(zerIdx(1)+1);
-vecsright=vec(zerIdx(1)-1);
-vecsleft=vec(zerIdx(1)+1);
+% eigvalright=eigvec(zerIdx(1)-1);
+% eigvalleft=eigvec(zerIdx(1)+1);
+% vecsright=vec(zerIdx(1)-1);
+% vecsleft=vec(zerIdx(1)+1);
 eigval=eigs(1);
 
 
@@ -132,20 +132,20 @@ eigval=eigs(1);
 
 % Iterate in 
 
-while (vecsleft>1e-16)
-eignew=(eigvalleft+eigvalright)/2;
-vecnew=(vecsleft+vecsright)/2;
-if vecnew<0
-    eigvalright=eignew;
-    vecsright=vecnew;
-end
-if vecnew>0
-    eigvalleft=eignew;
-    vecsleft=vecnew;
-end
-end
-
-eigval=eigvalleft;
+% while (vecsleft>1e-16)
+% eignew=(eigvalleft+eigvalright)/2;
+% vecnew=(vecsleft+vecsright)/2;
+% if vecnew<0
+%     eigvalright=eignew;
+%     vecsright=vecnew;
+% end
+% if vecnew>0
+%     eigvalleft=eignew;
+%     vecsleft=vecnew;
+% end
+% end
+% 
+% eigval=eigvalleft;
 
 % Improve accuracy 
 diff=1;
