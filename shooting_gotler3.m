@@ -169,6 +169,30 @@ H1=F1(2,1)-((khat*A^2)/(a^4))*F1(1,1);
 H2=F1(2,length(F1(2,:))) + khat*F1(1,length(F1(2,:)));
 v=F1;
 
+% Set all values below zero to zero (not saure if this is allowed_
+
+v1=v(1,:);
+v1(v1<0)=0;
+v(1,:)=v1;
+
+% Find local maxima
+
+maxs=[];
+for j=2:length(v(1,:))-1
+    if (v(1,j-1)<v(1,j) && v(1,j)>v(1,j+1))
+        maxs=[j,maxs];
+    end
+end
+
+% Normalise
+
+v(1,:)=(1/v(1,maxs(1)))*v(1,:);
+
+
+% Normalisation of eigenmodes
+
+
+
 % Plotting of eigenomdes (if running evvsk % out)
 
     figure('position', [0,0,800,800]); 

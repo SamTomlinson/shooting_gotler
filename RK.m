@@ -52,16 +52,18 @@ function [eta, v] = RK(a,b,deltaeta,bcs,gotler,baseT,baseTdash,...
     % RK from far boundary in towards zero
     
     for k = n-1:-1:1 
-        
-        k1 = gotler(eta(k+1),v(:,k+1),baseT(k+1),baseTdash(k+1),kshoot,eigval);
+        j=5*k;
+        k;
+        size(baseT);
+        k1 = gotler(eta(k+1),v(:,k+1),baseT(j-1),baseTdash(j-1),kshoot,eigval);
 
-        k2 = gotler(eta(k+1)-0.5*deltaeta,v(:,k+1)-0.5*deltaeta.*k1',baseT(k+1),...
-            baseTdash(k+1),kshoot,eigval);
+        k2 = gotler(eta(k+1)-0.5*deltaeta,v(:,k+1)-0.5*deltaeta.*k1',baseT(j-2),...
+            baseTdash(j-2),kshoot,eigval);
 
-        k3 = gotler(eta(k+1)-0.5*deltaeta,v(:,k+1)-0.5*deltaeta.*k2',baseT(k+1),...
-            baseTdash(k+1),kshoot,eigval);
+        k3 = gotler(eta(k+1)-0.5*deltaeta,v(:,k+1)-0.5*deltaeta.*k2',baseT(j-3),...
+            baseTdash(j-3),kshoot,eigval);
 
-        k4 = gotler(eta(k+1)-deltaeta,v(:,k+1)-deltaeta.*k3',baseT(k+1),baseTdash(k+1),...
+        k4 = gotler(eta(k+1)-deltaeta,v(:,k+1)-deltaeta.*k3',baseT(j-4),baseTdash(j-4),...
             kshoot,eigval);
 
         v(:,k)=v(:,k+1)-deltaeta*(k1'+2.*k2'+2.*k3'+k4')./6;

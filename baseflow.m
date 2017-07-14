@@ -84,11 +84,11 @@ baseU=S.y(2,:); baseUdash=S.y(3,:);
 
 % Interpolate base flow for right grid size
 
-baseT = interp1(eta,baseT,a:deltaeta:b,'spline');
-baseTdash = interp1(eta,baseTdash,a:deltaeta:b,'spline');
-baseU = interp1(eta,baseU,a:deltaeta:b,'spline');
-baseUdash = interp1(eta,baseUdash,a:deltaeta:b,'spline');
-eta=a:deltaeta:b;
+baseT = interp1(eta,baseT,a:deltaeta/5:b,'spline');
+baseTdash = interp1(eta,baseTdash,a:deltaeta/5:b,'spline');
+baseU = interp1(eta,baseU,a:deltaeta/5:b,'spline');
+baseUdash = interp1(eta,baseUdash,a:deltaeta/5:b,'spline');
+eta=a:deltaeta/5:b;
 
 % Plot solution (if running anyother program 
 
