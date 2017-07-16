@@ -17,4 +17,4 @@ end
 
 % Normalise
 
-v(1,:)=(1/v(1,maxs(1)))*v(1,:);
+vn=(1/v(1,maxs(1)))*v(1,:);

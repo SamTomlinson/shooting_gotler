@@ -96,6 +96,21 @@ end
 
 ev=ev(end:-1:1);
 
+%% Normalisation of other flow variables
+
+T1=normalise(-baseTdashm.*v1./baseTm);
+T2=normalise(-baseTdashm.*v2./baseTm); 
+T3=normalise(-baseTdashm.*v3./baseTm);
+u1=-baseUdashm.*v1./baseTm+1; 
+u2=-baseUdashm.*v2./baseTm+1; 
+u3=-baseUdashm.*v3./baseTm+1;
+w1=normalise(-dv1./(0.5.*baseTm)); 
+w2=normalise(-dv2./(1.*baseTm)); 
+w3=normalise(-dv3./(2.*baseTm));
+p1=normalise(-dv1./(0.5.^2.*baseTm.^2));
+p2=normalise(-dv2./(1.^2.*baseTm.^2)); 
+p3=normalise(-dv3./(2.^2.*baseTm.^2));
+
 
 %% Plotting
 
@@ -149,9 +164,9 @@ grid on
 hold off;
     
 figure('position', [0,0,800,800]); 
-plot(eta,-baseTdashm.*v1./baseTm,'LineWidth',2); hold on; 
-plot(eta,-baseTdashm.*v2./baseTm,'LineWidth',2); 
-plot(eta,-baseTdashm.*v3./baseTm,'LineWidth',2); 
+plot(eta,T1,'LineWidth',2); hold on; 
+plot(eta,T2,'LineWidth',2); 
+plot(eta,T3,'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
@@ -163,9 +178,9 @@ grid on
 hold off;
 
 figure('position', [0,0,800,800]); 
-plot(eta,-baseUdashm.*v1./baseTm,'LineWidth',2); hold on; 
-plot(eta,-baseUdashm.*v2./baseTm,'LineWidth',2); 
-plot(eta,-baseUdashm.*v3./baseTm,'LineWidth',2); 
+plot(eta,u1,'LineWidth',2); hold on; 
+plot(eta,u2,'LineWidth',2); 
+plot(eta,u3,'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
@@ -177,9 +192,9 @@ grid on
 hold off;
 
 figure('position', [0,0,800,800]); 
-plot(eta,-dv1./(0.5.*baseTm),'LineWidth',2); hold on; 
-plot(eta,-dv2./(1.*baseTm),'LineWidth',2); 
-plot(eta,-dv3./(2.*baseTm),'LineWidth',2); 
+plot(eta,w1,'LineWidth',2); hold on; 
+plot(eta,w2,'LineWidth',2); 
+plot(eta,w3,'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
@@ -191,9 +206,9 @@ grid on
 hold off;
 
 figure('position', [0,0,800,800]); 
-plot(eta,-dv1./(0.5.^2.*baseTm.^2),'LineWidth',2); hold on; 
-plot(eta,-dv2./(1.^2.*baseTm.^2),'LineWidth',2); 
-plot(eta,-dv3./(2.^2.*baseTm.^2),'LineWidth',2); 
+plot(eta,p1,'LineWidth',2); hold on; 
+plot(eta,p2,'LineWidth',2); 
+plot(eta,p3,'LineWidth',2); 
 set(gca,'Fontsize',20)
 l1=legend('$k=0.5$','$k=1$','$k=2$');
 set(l1, 'Interpreter','LaTex','Fontsize',30);
