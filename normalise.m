@@ -1,3 +1,28 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                              normalise                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%                           Code description                          %
+
+
+
+% Normalises the input vector dependent on its maximum
+
+
+
+%                                 Key                                 % 
+%
+% v - input vector
+% 
+% vn - normalised vector
+%
+
+
+
+%                           Mostly plotting                           %
+
 function [vn] = ...
           normalise(v)
 

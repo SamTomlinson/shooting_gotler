@@ -13,7 +13,6 @@
 
 
 
-close all
 %                                 Key                                 % 
 %
 % eta - grid points

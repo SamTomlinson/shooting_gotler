@@ -1,3 +1,51 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 loop                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%                           Code description                          %
+
+
+
+% Imporves accuracy of shoot, iterates with increasing accuracy 
+
+
+
+%                                 Key                                 % 
+%
+% tol - tolerance of shooting accuracy
+%
+% v - v0 and v0dash array 
+%
+% gotler - function containing de for gotler
+%
+% deltaeta - step size
+%
+% tol - tolerance
+%
+% bcs - values of boundary conditions (2D vector)
+%
+% init - initial guess, if not specified given as [-5,10]
+%
+% a,b - two ends of the domain
+%
+% flow parameters - gamma (specific heat), Pr (prandtl), C (sutherlands
+% constant), D (fitting parameter), etab (matching point for edge of
+% adjustment region)
+% 
+% eigval - found eigenvalue for entered khat
+%
+% k - spanwise wavenumber
+% 
+% base flow - baseT, baseTdash, base U base flow vectors and derivatives
+% intbaseT integral for Q term in DE
+
+
+
+%                           Mostly plotting                           %
+
+
 function [eigval,H1]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
     baseTdash,shoot1,tol)
 
