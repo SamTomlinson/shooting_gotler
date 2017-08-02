@@ -50,7 +50,7 @@
 
 % Flow parameters 
 
-a=1; b=20; deltaeta=0.01;
+a=0.5; b=20; deltaeta=0.01;
 Pr=1; C=0.509; D=1; A=3*(1+C)/Pr;
 
 % Base flow
@@ -97,6 +97,13 @@ ev=ev(end:-1:1);
 
 %% Normalisation of other flow variables
 
+% Recalculate base eta and base flow variables with correct size
+baseeta=a:deltaeta/5:b;
+baseTm = interp1(baseeta,baseT,a:deltaeta:b,'spline');
+baseTdashm = interp1(baseeta,baseTdash,a:deltaeta:b,'spline');
+baseUm = interp1(baseeta,baseU,a:deltaeta:b,'spline');
+baseUdashm = interp1(baseeta,baseUdash,a:deltaeta:b,'spline');
+
 T1=normalise(-baseTdashm.*v1./baseTm);
 T2=normalise(-baseTdashm.*v2./baseTm); 
 T3=normalise(-baseTdashm.*v3./baseTm);
@@ -113,19 +120,12 @@ p3=normalise(-dv3./(2.^2.*baseTm.^2));
 
 %% Plotting
 
-% Recalculate base eta and base flow variables with correct size
-baseeta=a:deltaeta/5:b;
-baseTm = interp1(baseeta,baseT,a:deltaeta:b,'spline');
-baseTdashm = interp1(baseeta,baseTdash,a:deltaeta:b,'spline');
-baseUm = interp1(baseeta,baseU,a:deltaeta:b,'spline');
-baseUdashm = interp1(baseeta,baseUdash,a:deltaeta:b,'spline');
-
 figure('position', [0,0,800,800]); 
 plot(baseeta,baseT,'LineWidth',2); 
 set(gca,'Fontsize',20)
 ylabel('Temp. in adj. region, $T_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
+xlim([0,b])
 grid on
 
 figure('position', [0,0,800,800]); 
@@ -133,7 +133,7 @@ plot(baseeta,baseU,'LineWidth',2);
 set(gca,'Fontsize',20)
 ylabel('Vel. in adj. region, $U_1$','Interpreter', 'LaTex','Fontsize',40)
 xlabel('Wall layer variable, $\zeta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
+xlim([0,b])
 grid on
 
 
@@ -143,7 +143,7 @@ set(gca,'Fontsize',20)
 ylabel('Eigenvalue, $\beta^2(G^*-Q)$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('Wavenumber, $\hat{k}$','Interpreter', 'LaTex','Fontsize',40)
-xlim([1,8])
+xlim([0.5,8])
 grid on
 hold off;
 
@@ -157,7 +157,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
+xlim([0,b])
 
 grid on
 hold off;
@@ -172,7 +172,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Temp. in the temp. adj. region $T_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
+xlim([0,b])
 grid on
 hold off;
 
@@ -186,7 +186,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $u_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
+xlim([0,b])
 grid on
 hold off;
 
@@ -200,7 +200,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Vel. in the temp. adj. region $w_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
+xlim([0,b])
 grid on
 hold off;
 
@@ -214,7 +214,7 @@ set(l1, 'Interpreter','LaTex','Fontsize',30);
 ylabel('Pres. in the temp. adj. region $p_0$','Interpreter',...
         'LaTex','Fontsize',40)
 xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex','Fontsize',40)
-xlim([a,b])
+xlim([0,b])
 grid on
 hold off;
 
