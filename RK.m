@@ -4,7 +4,7 @@
 
 % Uses a fourth order runge kutta method to march backwards in 
 % space from the far field to the near field giving a boundary value
-% at the near field. Outputs nodes and eigenmodes. 
+% at the near field. Outputs nodes and eigenmodes
 
 function [eta, v] = RK(a,b,deltaeta,bcs,gotler,baseT,baseTdash,...
     kshoot,eigval)
