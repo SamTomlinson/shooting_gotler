@@ -49,9 +49,9 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     end
     % improve accuracy 
     eigs=eigvec(zerIdx); eigval=eigs(1);
-    diff=1; tol=0.1;
+    diff=1; tol=0.01;
     while abs(diff>1e-16)
-        eigvalold=eigval;
+        eigvalold=eigval
         [eigval,~]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
         baseTdash,shoot1,tol);
         diff=abs(eigvalold-eigval);
