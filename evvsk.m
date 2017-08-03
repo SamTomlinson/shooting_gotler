@@ -16,7 +16,8 @@ Pr=1; C=0.509; D=1; A=3*(1+C)/Pr;
 %initialise 
 ev=[];
 % loop through different wavenumbers and calculate ev
-for k=0.1:0.5:8
+for k=0.1:0.1:8
+    k
     % calculate ev
     [eta, v,eigval] = shooting_gotler3(@gotler,deltaeta,a,b,k);
     % fill vector
