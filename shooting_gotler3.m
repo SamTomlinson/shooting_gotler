@@ -76,15 +76,5 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     v(:,1:b2)=0;
 
     % plotting of eigenmodes (if running evvsk % out)
-%     figure('position', [0,0,800,800]); 
-%     plot(eta,v(1,:),'LineWidth',2); 
-%     set(gca,'Fontsize',20)
-%     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
-%          'LaTex','Fontsize',40)
-%     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex',...
-%         'Fontsize',40)
-%     xlim([0.1,b])
-%     grid on
-%     hold off; 
     
 end
