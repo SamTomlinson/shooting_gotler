@@ -2,44 +2,20 @@
 %                              normalise                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Normalises the input vector dependent on its maximum value. Outputs
+% the normalise vector.
 
-
-%                           Code description                          %
-
-
-
-% Normalises the input vector dependent on its maximum
-
-
-
-%                                 Key                                 % 
-%
-% v - input vector
-% 
-% vn - normalised vector
-%
-
-
-
-%                           Mostly plotting                           %
-
-function [vn] = ...
-          normalise(v)
-
-maxs=[];
-for j=2:length(v(1,:))-1
-    if (v(1,j-1)<v(1,j) && v(1,j)>v(1,j+1))
-        maxs=[j,maxs];
+function [vn] = normalise(v)
+   
+    % initialise 
+    maxs=[];
+    % loop through finding maxima
+    for j=2:length(v(1,:))-1
+        if (v(1,j-1)<v(1,j) && v(1,j)>v(1,j+1))
+            maxs=[j,maxs];
+        end
     end
-    if (v(1,j-1)<v(1,j) && v(1,j)>v(1,j+1))
-        maxs=[j,maxs];
-    end
-    if (v(1,j-1)<v(1,j) && v(1,j)>v(1,j+1))
-        maxs=[j,maxs];
-    end
+    % normalise
+    vn=(1/v(1,maxs(1)))*v(1,:);
     
 end
-
-% Normalise
-
-vn=(1/v(1,maxs(1)))*v(1,:);
