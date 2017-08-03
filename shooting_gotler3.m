@@ -29,16 +29,16 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     end  
 
     % plot H vs eig  
-    figure('position', [0,0,800,800]); 
-    plot(eigvec,vec,'k-','LineWidth',2); 
-    set(gca,'Fontsize',20)
-    ylabel('Near field error, $H(\hat{k})$','Interpreter',...
-        'LaTex','Fontsize',40)
-    xlabel('Eig. val., $\beta^2(G^*-Q)$','Interpreter', ...
-        'LaTex','Fontsize',40)
-    xlim([0.01,0.6])
-    grid on
-    hold off;  
+%     figure('position', [0,0,800,800]); 
+%     plot(eigvec,vec,'k-','LineWidth',2); 
+%     set(gca,'Fontsize',20)
+%     ylabel('Near field error, $H(\hat{k})$','Interpreter',...
+%         'LaTex','Fontsize',40)
+%     xlabel('Eig. val., $\beta^2(G^*-Q)$','Interpreter', ...
+%         'LaTex','Fontsize',40)
+%     xlim([0.01,0.6])
+%     grid on
+%     hold off;  
 
     % calculate index of the crossing points  
     zerIdx=[];
@@ -51,7 +51,7 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     eigs=eigvec(zerIdx); eigval=eigs(1);
     diff=1; tol=0.01;
     while abs(diff>1e-16)
-        eigvalold=eigval
+        eigvalold=eigval;
         [eigval,~]=loop(eigval,khat,a,b,A,deltaeta,a1,gotler,baseT,...
         baseTdash,shoot1,tol);
         diff=abs(eigvalold-eigval);
@@ -76,15 +76,15 @@ function [eta, v,eigval] = shooting_gotler3(gotler,deltaeta,a,b,khat)
     v(:,1:b2)=0;
 
     % plotting of eigenmodes (if running evvsk % out)
-    figure('position', [0,0,800,800]); 
-    plot(eta,v(1,:),'LineWidth',2); 
-    set(gca,'Fontsize',20)
-    ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
-         'LaTex','Fontsize',40)
-    xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex',...
-        'Fontsize',40)
-    xlim([0.1,b])
-    grid on
-    hold off; 
+%     figure('position', [0,0,800,800]); 
+%     plot(eta,v(1,:),'LineWidth',2); 
+%     set(gca,'Fontsize',20)
+%     ylabel('Vel. in the temp. adj. region $v_0$','Interpreter',...
+%          'LaTex','Fontsize',40)
+%     xlabel('D.H. variable, $\eta$','Interpreter', 'LaTex',...
+%         'Fontsize',40)
+%     xlim([0.1,b])
+%     grid on
+%     hold off; 
     
 end
